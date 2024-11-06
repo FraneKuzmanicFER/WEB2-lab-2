@@ -1,0 +1,39 @@
+@import url('./sensitive_data_exposure.css');
+@import url('./xss.css');
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+  
+.home-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+button, input[type="submit"] {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 1rem;
+    width: 180px;
+  }
+  
+.home-container {
+    width: 300px;
+    text-align: center;
+  }
+
+  
+  

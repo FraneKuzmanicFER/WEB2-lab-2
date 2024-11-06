@@ -1,0 +1,38 @@
+.xss-header{
+    border-bottom: 1px solid #ccc;
+    padding: 0rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.xss-container{
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+    padding: 2rem;
+    gap: 10rem;
+}
+
+.xss-form-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.xss-form label{
+    margin-top: 2rem;
+}
+
+.xss-form button{
+    margin: 2rem 0rem 0rem 0rem;
+}
+
+.output-container{
+    display: flex;
+    align-items: center;
+}
+
+.output-container h2{
+    margin-right: 0.5rem;
+}

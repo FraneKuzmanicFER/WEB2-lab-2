@@ -2,10 +2,16 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import { Pool } from 'pg';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 3000;
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || '12345678901234567890123456789012'; 
@@ -39,8 +45,13 @@ function encrypt(text: string): string {
     return decrypted;
   }*/
 
-app.use(express.json());
+app.get('/', (req: Request, res: Response) => {
+  res.render('index');
+});
 
+app.get('/sensitive-data-exposure', (req: Request, res: Response) => {
+  res.render('sensitive_data_exposure', { savedData: null });
+});
 
 app.post('/save-card', async (req: Request, res: Response) => {
     const { firstName, lastName, cardNumber, expiryDate, cvc } = req.body;
@@ -55,10 +66,25 @@ app.post('/save-card', async (req: Request, res: Response) => {
         'INSERT INTO credit_cards (first_name, last_name, card_number, expiry_date, cvc) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         [firstName, lastName, storedCardNumber, storedExpiryDate, storedCvc]
       );
-      res.json(result.rows[0]); // Send back saved data as it appears in the database
+      res.render('sensitive_data_exposure', { savedData: result.rows[0] }); // Send back saved data as it appears in the database
     } catch (error) {
       res.status(500).send('Error saving data');
     }
+  });
+
+  function sanitizeInput(input: string): string {
+    return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  
+  app.get('/xss', (req, res) => {
+    const { input, enableXss } = req.query;
+    let output = input;
+  
+    if (enableXss !== 'true' && input) {
+      output = sanitizeInput(input as string);
+    }
+  
+    res.render('xss', { output });
   });
 
 app.listen(PORT, () => {

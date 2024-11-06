@@ -1,0 +1,104 @@
+<!-- views/sensitive_data_exposure.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sensitive Data Exposure</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script>
+      function updateFormAction() {
+        const vulnerability = document.getElementById("vulnerabilityToggle")
+          .checked
+          ? 1
+          : 0;
+        document.getElementById(
+          "saveCardForm"
+        ).action = `/save-card?vulnerability=${vulnerability}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize form action based on checkbox state
+        updateFormAction();
+        document
+          .getElementById("vulnerabilityToggle")
+          .addEventListener("change", updateFormAction);
+      });
+    </script>
+  </head>
+  <body>
+    <header class="sensitive-data-exposure-header">
+      <button onclick="location.href='/'">Home</button>
+    </header>
+    <div class="sensitive-data-exposure-container">
+      <div class="form-container">
+        <h1>Sensitive Data Exposure</h1>
+        <div class="form-field">
+          <label>
+            <input type="checkbox" id="vulnerabilityToggle" />
+            Enable Vulnerability
+          </label>
+          <h3 class="form-field-title">
+            For demonstration, enter imaginary credit card details :
+          </h3>
+        </div>
+
+        <form id="saveCardForm" method="POST">
+          <div class="form-field">
+            <label for="firstName">Card Holder Name</label>
+            <input type="text" id="firstName" name="firstName" required />
+          </div>
+          <div class="form-field">
+            <label for="lastName">Card Holder Surname</label>
+            <input type="text" id="lastName" name="lastName" required />
+          </div>
+          <div class="form-field">
+            <label for="cardNumber">Card Number (16 digits)</label>
+            <input
+              type="text"
+              id="cardNumber"
+              name="cardNumber"
+              pattern="\d{16}"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="expiryDate">Expiry Date (MM/YY)</label>
+            <input
+              type="text"
+              id="expiryDate"
+              name="expiryDate"
+              pattern="\d{2}/\d{2}"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="cvc">CVC (3 digits)</label>
+            <input type="text" id="cvc" name="cvc" pattern="\d{3}" required />
+          </div>
+          <input type="submit" value="Save Card" />
+        </form>
+      </div>
+
+      <% if (savedData) { %>
+      <div class="saved-data">
+        <h2>Saved Data retrieved from a database:</h2>
+        <div class="data-field">
+          <strong>First Name:</strong> <%= savedData.first_name %>
+        </div>
+        <div class="data-field">
+          <strong>Last Name:</strong> <%= savedData.last_name %>
+        </div>
+        <div class="data-field">
+          <strong>Card Number:</strong> <%= savedData.card_number %>
+        </div>
+        <div class="data-field">
+          <strong>Expiry Date:</strong> <%= savedData.expiry_date %>
+        </div>
+        <div class="data-field"><strong>CVC:</strong> <%= savedData.cvc %></div>
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>

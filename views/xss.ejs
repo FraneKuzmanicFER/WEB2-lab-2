@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="xss-header">
+      <button onclick="location.href='/'">Home</button>
+    </header>
+    <div class="xss-container">
+      <div class="xss-form-container">
+        <h1>XSS Demo</h1>
+        <form class="xss-form" action="/xss" method="get">
+          <label for="input"
+            >Enter some script, for example:
+            &lt;script&gt;alert('attack')&lt;/script&gt;</label
+          >
+          <input type="text" id="input" name="input" required />
+          <label for="enableXss">
+            <input
+              type="checkbox"
+              id="enableXss"
+              name="enableXss"
+              value="true"
+            />Enable XSS vulnerability:</label
+          >
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <div class="output-container">
+        <h2>Output:</h2>
+        <span><%- output %></span>
+      </div>
+    </div>
+  </body>
+</html>
