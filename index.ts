@@ -12,7 +12,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3000;
+const externalUrl = process.env.RENDER_EXTERNAL_URL;
+const PORT = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || '12345678901234567890123456789012'; 
 const IV_LENGTH = 16;
@@ -21,7 +22,7 @@ const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',	
     database: process.env.DB_NAME || 'web2_security',
-    password: process.env.DB_PASSWORD || 'bazepodataka',
+    password: process.env.DB_PASSWORD || 'password',
     port: Number(process.env.DB_PORT) || 5432,
   });
 
@@ -87,6 +88,8 @@ app.post('/save-card', async (req: Request, res: Response) => {
     res.render('xss', { output });
   });
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
-});
+  const hostname = '0.0.0.0';
+  app.listen(PORT, hostname, () => {
+  console.log(`Server locally running at http://${hostname}:${PORT}/ and from
+  outside on ${externalUrl}`);
+  });
