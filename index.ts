@@ -67,12 +67,13 @@ app.post('/save-card', async (req: Request, res: Response) => {
         'INSERT INTO credit_cards (first_name, last_name, card_number, expiry_date, cvc) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         [firstName, lastName, storedCardNumber, storedExpiryDate, storedCvc]
       );
-      res.render('sensitive_data_exposure', { savedData: result.rows[0] }); // Send back saved data as it appears in the database
+      res.render('sensitive_data_exposure', { savedData: result.rows[0] }); // Send back data to the client in a format same as it is in the database
     } catch (error) {
       res.status(500).send('Error saving data');
     }
   });
 
+  //We use this function to sanitize the input and prevent XSS attacks
   function sanitizeInput(input: string): string {
     return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
