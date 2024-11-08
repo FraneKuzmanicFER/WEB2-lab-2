@@ -75,7 +75,16 @@ app.post('/save-card', async (req: Request, res: Response) => {
 
   //We use this function to sanitize the input and prevent XSS attacks
   function sanitizeInput(input: string): string {
-    return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    // Map of characters to their HTML entity equivalents
+    const escapeChars: { [key: string]: string } = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;'
+    };
+  
+    return input.replace(/[&<>"']/g, (match: string): string => escapeChars[match]);
   }
   
   app.get('/xss', (req, res) => {
